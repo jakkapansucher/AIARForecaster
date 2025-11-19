@@ -1,33 +1,28 @@
-
-// /// <reference types="vite/client" />
+/// <reference types="vite/client" />
 
 interface ImportMetaEnv {
   readonly VITE_API_KEY: string;
-  readonly BASE_URL: string;
-  readonly MODE: string;
-  readonly DEV: boolean;
-  readonly PROD: boolean;
-  readonly SSR: boolean;
+  // Standard Vite env variables (BASE_URL, MODE, etc.) are inherited from vite/client
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
-// Polyfill process.env for GenAI SDK compatibility in Vite environment
-declare var process: {
-  env: {
+// Augment the existing NodeJS namespace to support process.env.API_KEY
+// This avoids "Cannot redeclare block-scoped variable 'process'" errors while ensuring type safety
+declare namespace NodeJS {
+  interface ProcessEnv {
     API_KEY: string;
-    [key: string]: string | undefined;
   }
-};
+}
 
 declare module '*.css' {
-  const content: { [className: string]: string };
-  export default content;
+  const styles: { [className: string]: string };
+  export default styles;
 }
 
 declare module '*.svg' {
-  const content: string;
-  export default content;
+  const svgPath: string;
+  export default svgPath;
 }
