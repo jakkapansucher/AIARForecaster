@@ -1,6 +1,5 @@
-
 import React, { useRef } from 'react';
-import { UploadCloud, FileSpreadsheet } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 
 interface FileUploadProps {
   onFileSelect: (file: File) => void;

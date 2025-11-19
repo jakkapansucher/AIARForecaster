@@ -1,16 +1,10 @@
-
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { MonthlyData, ForecastResult } from '../types';
 
-// Access environment variable using Vite's standard import.meta.env
-const apiKey = import.meta.env.VITE_API_KEY || '';
-const ai = new GoogleGenAI({ apiKey: apiKey });
+// Access environment variable using process.env.API_KEY as per guidelines
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getForecast = async (history: MonthlyData[], segmentName: string = 'Total Portfolio'): Promise<ForecastResult> => {
-  if (!apiKey) {
-    throw new Error("Configuration Error: ไม่พบ VITE_API_KEY ใน Environment Variables");
-  }
-
   // 1. Validate Data Integrity
   if (!history || history.length === 0) {
     throw new Error("ไม่พบข้อมูลสำหรับการพยากรณ์");
