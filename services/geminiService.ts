@@ -1,11 +1,31 @@
+
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { MonthlyData, ForecastResult } from '../types';
 
-// Access environment variable using process.env.API_KEY as per guidelines
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Note: We do NOT initialize 'ai' globally here. 
+// Doing so causes the app to crash immediately on load if the key is missing or invalid.
 
 export const getForecast = async (history: MonthlyData[], segmentName: string = 'Total Portfolio'): Promise<ForecastResult> => {
-  // 1. Validate Data Integrity
+  
+  // 1. Get API Key explicitly from process.env.API_KEY as per Google GenAI Guidelines
+  // Note: In a Vite environment, ensure API_KEY is properly exposed via define or environment variables configuration.
+  const apiKey = process.env.API_KEY;
+  
+  // Trim and validate
+  if (!apiKey || apiKey.trim() === '') {
+    throw new Error("ไม่พบ API Key (process.env.API_KEY) กรุณาตรวจสอบการตั้งค่า Environment Variables");
+  }
+
+  // 2. Initialize Client (Lazy Initialization) with Safe Guard
+  let ai;
+  try {
+    ai = new GoogleGenAI({ apiKey: apiKey });
+  } catch (initError: any) {
+    console.error("Gemini Client Init Error:", initError);
+    throw new Error(`ไม่สามารถเชื่อมต่อกับ Gemini API ได้: ${initError.message}`);
+  }
+
+  // 3. Validate Data Integrity
   if (!history || history.length === 0) {
     throw new Error("ไม่พบข้อมูลสำหรับการพยากรณ์");
   }
