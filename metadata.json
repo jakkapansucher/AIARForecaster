@@ -1,0 +1,5 @@
+{
+  "name": "AI AR Forecaster",
+  "description": "Web application to forecast monthly Accounts Receivable amounts from CSV data using Gemini API",
+  "requestFramePermissions": []
+}
